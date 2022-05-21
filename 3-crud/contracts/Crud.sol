@@ -23,22 +23,25 @@ contract Crud {
     }
 
     function update(uint i, string memory _newName) public {
+        find(i);
         users[i-1].name = _newName;
     }
 
-    function remove(uint i) public {
+    function find(uint id) internal view returns(uint) {
+        for(uint i = 0; i<users.length; i++) {
+            if(users[i].id == id) {
+                return id;
+            } 
+        }
+        revert("user does not exist");
+    }
+
+    function remove(uint i) public checkNumber(i) {
         delete users[i-1];
     }
-    /*
-    function find(uint i) internal view returns(uint) {
-        for(uint index = 1; index<users.length+1; index++) {
-            if( users[index].id == i) {
-                return users[index].id;
-            } else {
-                break;
-            }
-
-        }
+    modifier checkNumber(uint i) {
+        require(i>0, "Number must be > 0");
+        require(i<= users.length, "doesnt exist");
+        _;
     }
-    */
 }
