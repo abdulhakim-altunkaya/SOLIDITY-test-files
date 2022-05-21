@@ -4,7 +4,7 @@ contract("Crud", () => {
   let crud = null;
 
   before( async() => {
-    crud = await Crud.new();
+    crud = await Crud.new(); 
   })
 
   it("1--should create a new user", async () => {
@@ -21,15 +21,15 @@ contract("Crud", () => {
   it("3--should create a third user", async () => {
     await crud.create("azad");
     const data = await crud.nextId();
-    assert(data.toString() == "4");
+    assert(data.toString() === "4");
   })
 
   //struct variables in solidity are treated as array in javascript.
   //Thats why we have data[] down here.
   it("4--should read user name", async () => {
     const data = await crud.read(2);
-    assert(data[0].toString() == "2");
-    assert(data[1] == "agit");
+    assert(data[0].toString() === "2");
+    assert(data[1] === "agit");
   })
 
   it("5--should update user name", async () => {
@@ -65,13 +65,13 @@ contract("Crud", () => {
   it("8--should remove record's values and make them default", async () => {
     await crud.remove(1);
     const data = await crud.users(0); //Thats how you access an array inside contract file.
-    assert(data.id == 0);
+    assert(data[0].toString() === "0");
   })
 
   it("9--should remove the record's values and make them default 2", async () => {
-    await crud.remove2(2);
+    await crud.remove(2);
     try {
-      await crud.read2(2)
+      await crud.read(2)
     } catch (error) {
       assert(error.message.includes("user does not exist"));
       return;

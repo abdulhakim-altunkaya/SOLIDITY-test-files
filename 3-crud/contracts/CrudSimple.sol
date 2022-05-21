@@ -2,7 +2,7 @@
 
 pragma solidity >=0.8.7;
 
-contract Crud {
+contract CrudSimple {
 
     struct User {
         uint id;
@@ -14,7 +14,7 @@ contract Crud {
 
     modifier checkNumber(uint i) {
         require(i>0, "Number must be > 0");
-        require(i<= users.length, "doesnt exist");
+        require(i<= users.length, "user does not exist");
         _;
     }
 
@@ -23,16 +23,16 @@ contract Crud {
         nextId++;
     }
 
-    function read(uint i) public view returns(uint, string memory) {
+    function read(uint i) public view checkNumber(i) returns(uint, string memory) {
         User memory myUser = users[i-1];
         return (myUser.id, myUser.name);
     }
 
-    function remove(uint i) public checkNumber(i) {
+    function remove(uint i) public checkNumber(i) { 
         delete users[i-1];
     }
 
-    function update(uint id, string memory _newName) public {
+    function update(uint i, string memory _newName) public checkNumber(i) {
         users[i-1].name = _newName;
     }
     
