@@ -18,23 +18,28 @@ contract("Crud", () => {
     const data = await crud.nextId();
     assert(data.toString() === "3");
   })
+  it("3--should create a third user", async () => {
+    await crud.create("azad");
+    const data = await crud.nextId();
+    assert(data.toString() == "4");
+  })
 
   //struct variables in solidity are treated as array in javascript.
   //Thats why we have data[] down here.
-  it("3--should read user name", async () => {
+  it("4--should read user name", async () => {
     const data = await crud.read(2);
     assert(data[0].toString() == "2");
     assert(data[1] == "agit");
   })
 
-  it("4--should update user name", async () => {
+  it("5--should update user name", async () => {
     await crud.update(1, "Baran")
     const data = await crud.read(1);
     assert(data[1] === "Baran");
   })
 
 
-  it("5--should not update a non-existing user", async () => {
+  it("6--should not update a non-existing user", async () => {
     try {
       await crud.update(4, "siverek");
     } catch (error) {
@@ -42,7 +47,7 @@ contract("Crud", () => {
     }
   })
 
-  it("6--should not update a non-existing user - EXTRA SECURITY MODE", async () => {
+  it("7--should not update a non-existing user - EXTRA SECURITY MODE", async () => {
     try {
       await crud.update(5, "kercos");
     } catch (error) {
@@ -57,10 +62,21 @@ contract("Crud", () => {
     //at the assert code line of catch.
   })
 
-  it("7--should remove record's values and make them default", async () => {
+  it("8--should remove record's values and make them default", async () => {
     await crud.remove(1);
     const data = await crud.users(0); //Thats how you access an array inside contract file.
     assert(data.id == 0);
+  })
+
+  it("9--should remove the record's values and make them default 2", async () => {
+    await crud.remove2(2);
+    try {
+      await crud.read2(2)
+    } catch (error) {
+      assert(error.message.includes("user does not exist"));
+      return;
+    }
+    assert(false);
   })
 
 })

@@ -17,31 +17,25 @@ contract Crud {
         nextId++;
     }
 
-    function read(uint i) public view returns(uint, string memory) {
-        User memory myUser = users[i-1];
-        return (myUser.id, myUser.name);
+    function remove(uint id) public {
+        uint i = find(id);
+        delete users[i];
     }
-
-    function update(uint i, string memory _newName) public {
-        find(i);
-        users[i-1].name = _newName;
+    function update(uint id, string memory _newName) public {
+        uint i = find(id);
+        users[i].name = _newName;
     }
-
+    function read(uint id) public view returns(uint, string memory) {
+        uint i = find(id);
+        return(users[i].id, users[i].name);
+    }
+    
     function find(uint id) internal view returns(uint) {
         for(uint i = 0; i<users.length; i++) {
             if(users[i].id == id) {
-                return id;
+                return i;
             } 
         }
         revert("user does not exist");
-    }
-
-    function remove(uint i) public checkNumber(i) {
-        delete users[i-1];
-    }
-    modifier checkNumber(uint i) {
-        require(i>0, "Number must be > 0");
-        require(i<= users.length, "doesnt exist");
-        _;
     }
 }
